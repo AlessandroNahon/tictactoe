@@ -23,7 +23,7 @@ const player2: Player = {
   shape: 'x'
 }
 
-const players = [player1, player2]
+const players: Player[] = [player1, player2]
 
 function App() {
   const [board, setBoard] = useState<Board>(defaultBoard)
@@ -49,29 +49,31 @@ function App() {
     }
   }
 
-  function arrCol(arr: Board | { [x: string]: any; }[], n: number) {
-    return arr.map((x: { [x: string]: any; }) => x[n])
-  }
-
-  function tictactoe(arr: string[], p: Player): boolean {
-    return arr.every(c => c === p.shape)
+  function arrCol(b: Board, n: number): string[] {
+    return b.map((x: { [x: string]: any; }) => x[n])
   }
 
   function diagRow(b: Board): string[] {
     return b.map((_, i) => b[i][i])
   }
 
-  function reverseDiagRow(board: Board) {
+  function reverseDiagRow(board: Board): string[] {
     return diagRow(board.map((row) => row.reverse()))
   }
 
-  function findWinner() {
+  function tictactoe(a: string[], p: Player): boolean {
+    return a.every(c => c === p.shape)
+  }
+
+  function findWinner(): void {
     board.forEach((row, i) => {
       const col = arrCol(board, i)
       const diag = [reverseDiagRow(board), reverseDiagRow(board)]
 
-      players.forEach(p => {
-        if (tictactoe(row, p) || tictactoe(col, p) || tictactoe(diag[0], p) || tictactoe(diag[1], p)) {
+      players.forEach((p: Player) => {
+        const winnerFound = tictactoe(row, p) || tictactoe(col, p) || tictactoe(diag[0], p) || tictactoe(diag[1], p)
+
+        if (winnerFound) {
           winner.current = `${p.shape} is the winner!`
         }
       })

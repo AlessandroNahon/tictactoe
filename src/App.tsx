@@ -1,13 +1,10 @@
 import { useRef, useState } from 'react';
-import './App.css';
 
 type Board = string[][]
 
 type Shape = 'x' | 'o'
 
-type Player = {
-  shape: Shape
-}
+type Player = Shape
 
 const defaultBoard: Board = [
   ['', '', ''],
@@ -15,33 +12,28 @@ const defaultBoard: Board = [
   ['', '', ''],
 ]
 
-const player1: Player = {
-  shape: 'o'
-}
-
-const player2: Player = {
-  shape: 'x'
-}
-
+const player1: Player = 'o'
+const player2: Player = 'x'
 const players: Player[] = [player1, player2]
 
 function App() {
   const [board, setBoard] = useState<Board>(defaultBoard)
-  const [player, setPlayer] = useState<Player>(player1)
+  const [activePlayer, setActivePlayer] = useState<Player>(player1)
   const winner = useRef<string>('')
 
   function selectSquare(row: number, col: number): void {
-    const updatedBoard: Board = board.map((r, i) => r.map((shape, j) => {
+    const updatedBoard: Board = board.map((r, i) => r.map((player, j) => {
 
-      if (row === i && col === j && shape === '') {
-        if (player.shape === player1.shape) {
-          setPlayer(player2)
+      if (row === i && col === j && player === '') {
+
+        if (activePlayer === player1) {
+          setActivePlayer(player2)
         } else {
-          setPlayer(player1)
+          setActivePlayer(player1)
         }
-        return player.shape
+        return activePlayer
       }
-      return shape
+      return player
     }))
 
     if (winner.current === '') {
@@ -62,7 +54,7 @@ function App() {
   }
 
   function tictactoe(a: string[], p: Player): boolean {
-    return a.every(c => c === p.shape)
+    return a.every(c => c === p)
   }
 
   function findWinner(): void {
@@ -74,7 +66,7 @@ function App() {
         const winnerFound = tictactoe(row, p) || tictactoe(col, p) || tictactoe(diag[0], p) || tictactoe(diag[1], p)
 
         if (winnerFound) {
-          winner.current = `${p.shape} is the winner!`
+          winner.current = `${p} is the winner!`
         }
       })
     })
@@ -84,7 +76,7 @@ function App() {
 
   return (
     <div className="flex flex-col items-center justify-center">
-      <h1 className='text-9xl mb-10'>{winner.current === '' ? `Turn: ${player.shape}` : winner.current}</h1>
+      <h1 className='text-9xl mb-10'>{winner.current === '' ? `Turn: ${activePlayer}` : winner.current}</h1>
       <div data-testid='board' className='w-3/6 h-2/3 grid grid-rows-3 grid-cols-3 col-span-3 gap-3'>
         {
           board.map((row, i) => row.map((col, j) => (

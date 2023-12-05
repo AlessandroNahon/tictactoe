@@ -57,7 +57,24 @@ function App() {
     return a.every(c => c === p)
   }
 
+  function fullBoard(b: Board): boolean {
+    let result = true;
+
+    b.forEach((row: string[]) => {
+      row.forEach(element => {
+        if (typeof element !== 'string' || element.trim() === '') {
+          result = false;
+        }
+      });
+    });
+
+    return result;
+  }
+
   function findWinner(): void {
+    if (fullBoard(board)) {
+      winner.current = 'Game over.'
+    }
     board.forEach((row, i) => {
       const col = arrCol(board, i)
       const diag = [reverseDiagRow(board), reverseDiagRow(board)]

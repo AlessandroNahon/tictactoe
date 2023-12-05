@@ -75,12 +75,12 @@ function App() {
   findWinner()
 
   return (
-    <div className="flex flex-col items-center justify-center">
-      <h1 className='text-9xl mb-10'>{winner.current === '' ? `Turn: ${activePlayer}` : winner.current}</h1>
-      <div data-testid='board' className='w-3/6 h-2/3 grid grid-rows-3 grid-cols-3 col-span-3 gap-3'>
+    <div className="flex flex-col items-center justify-start bg-neutral-900 text-white h-screen">
+      <h1 className='text-9xl my-16'>{winner.current === '' ? `Turn: ${activePlayer}` : winner.current}</h1>
+      <div data-testid='board' className='w-3/6 h-2/4 grid grid-cols-3'>
         {
           board.map((row, i) => row.map((col, j) => (
-            <div data-testid={`row:${i}, col:${j}`} key={`row:${i}, col:${j}`} className='flex cursor-pointer items-center justify-center h-40 w-40 border-4' onClick={() => selectSquare(i, j)}>
+            <div data-testid={`row:${i}, col:${j}`} key={`row:${i}, col:${j}`} className={`flex cursor-pointer items-center justify-center h-40 w-39  ${j !== 2 ? 'border-r-2' : ''} ${i !== 2 ? 'border-b-2' : ''}`} onClick={() => selectSquare(i, j)}>
               <h2 data-testid='square' className='text-center text-8xl'>{col}</h2>
             </div>
           )))
